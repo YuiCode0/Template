@@ -1,0 +1,27 @@
+capture:
+  backend: mss
+  region:
+    left: 100
+    top: 100
+    right: 1380
+    bottom: 820
+  target_fps: 120
+
+detector:
+  weights: runs/iso_scene_yolo11n/weights/best.pt
+  imgsz: 512
+  conf: 0.30
+  iou: 0.50
+  device: 0
+
+tracker:
+  enabled: true
+  config: bytetrack.yaml
+
+input:
+  enabled: false
+  adb_device: null
+  action_cooldown_sec: 0.25
+
+minimap:
+  rect: [1090, 40, 1260, 210]
