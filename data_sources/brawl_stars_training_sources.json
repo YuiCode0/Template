@@ -1,0 +1,111 @@
+{
+  "project_reference": {
+    "name": "PylaAI/PylaAI",
+    "observed_public_architecture": {
+      "capture": "bettercam + producer/consumer frame queue with maxsize=1",
+      "inference": "ONNX Runtime sessions with CUDA / DirectML / CPU fallback",
+      "models": ["main game objects", "tiles/walls", "screen-state/templates"],
+      "logic": ["play.py tactical loop", "stage_manager state machine", "state_finder template matching", "lobby automation OCR"]
+    },
+    "safe_reuse_in_this_repo": [
+      "high-FPS capture design",
+      "latest-frame queue",
+      "separate perception models by task",
+      "state machine architecture",
+      "HSV/template/OCR helpers for UI state detection"
+    ]
+  },
+  "primary_training_sources": [
+    {
+      "name": "Roboflow Brawl Stars Dataset by Bloxxy",
+      "url": "https://universe.roboflow.com/bloxxy/brawl-stars-dataset",
+      "type": "object_detection_dataset",
+      "known_versions": [
+        {"version": 13, "images": 7179, "notes": "YOLO export formats available"},
+        {"version": 14, "images": 7181, "notes": "larger public version"},
+        {"version": 22, "images": 2551, "notes": "generated Oct 31 2024, YOLO11/YOLOv8/YOLO26 formats listed"},
+        {"version": 23, "images": 2551, "notes": "latest listed in search result"}
+      ],
+      "recommended_use": "bootstrap detector for player/enemy/wall/bush/object classes, then fine-tune on own captures"
+    },
+    {
+      "name": "Roboflow Brawl Stars model by brawl-stars-nyluk",
+      "url": "https://universe.roboflow.com/brawl-stars-nyluk/brawl-stars-7hhuk",
+      "type": "object_detection_model_dataset",
+      "images": 51,
+      "classes": ["Player Box", "Enemy", "Walls", "Bushes", "PowerCube", "Poison", "Match Start", "End", "Exit"],
+      "recommended_use": "class taxonomy reference, not enough images as primary dataset"
+    },
+    {
+      "name": "Roboflow Brawlstars Screenshots by kwilexs Workspace",
+      "url": "https://universe.roboflow.com/kwilexs-workspace/brawlstars-screenshots-emvl0",
+      "type": "object_detection_model_dataset",
+      "images": 519,
+      "classes": ["Player", "Event"],
+      "recommended_use": "supplemental UI/event detection"
+    },
+    {
+      "name": "Roboflow tibia health mana bar",
+      "url": "https://universe.roboflow.com/games-3nmzu/tibia-health-mana-bar",
+      "type": "health_bar_reference_dataset",
+      "recommended_use": "reference for health/status bar detection patterns, not Brawl-specific"
+    }
+  ],
+  "asset_sources_for_synthetic_data": [
+    {
+      "name": "tailsjs/brawl-stars-assets",
+      "url": "https://github.com/tailsjs/brawl-stars-assets",
+      "type": "asset_repository",
+      "notes": "Large asset archive; useful for synthetic sprites, UI assets, icons, templates, and class-name metadata. Check Fan Content Policy and repository licensing before redistribution."
+    },
+    {
+      "name": "LaptopCat/bs-fankit-rehosted",
+      "url": "https://github.com/LaptopCat/bs-fankit-rehosted",
+      "type": "fan_kit_asset_repository",
+      "notes": "Useful for synthetic overlays, brawler portraits, UI elements, and templates; assets remain Supercell property."
+    }
+  ],
+  "own_capture_plan": {
+    "target_raw_frames": 50000,
+    "target_labeled_frames_initial": 3000,
+    "target_labeled_frames_v1": 10000,
+    "capture_sources": [
+      "own emulator sessions in controlled environment",
+      "recorded videos converted into sampled frames",
+      "synthetic composites from permitted fan/content assets",
+      "public datasets with compatible licenses"
+    ],
+    "sampling": {
+      "video_fps": 30,
+      "sample_every_n_frames_initial": 5,
+      "dedup_phash_threshold": 4,
+      "hard_negative_ratio": 0.2
+    }
+  },
+  "recommended_classes_v1": [
+    "player",
+    "enemy",
+    "ally",
+    "wall",
+    "bush",
+    "power_cube",
+    "projectile",
+    "poison",
+    "health_bar",
+    "minimap_marker",
+    "match_start",
+    "victory",
+    "defeat",
+    "lobby_play_button",
+    "exit_button"
+  ],
+  "directory_layout": {
+    "raw": "datasets/brawl_stars/raw/",
+    "external": "datasets/brawl_stars/external/roboflow/",
+    "frames": "datasets/brawl_stars/frames/",
+    "deduped": "datasets/brawl_stars/deduped/",
+    "labels": "datasets/brawl_stars/labels/",
+    "yolo": "datasets/brawl_stars/yolo/",
+    "synthetic": "datasets/brawl_stars/synthetic/"
+  }
+}
