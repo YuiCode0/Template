@@ -1,0 +1,8 @@
+opencv-python>=4.9
+numpy>=1.26
+mss>=9.0
+ultralytics>=8.3
+PyYAML>=6.0
+Pillow>=10.0
+imagehash>=4.3
+dxcam>=0.0.5; platform_system == "Windows"
